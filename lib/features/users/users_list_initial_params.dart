@@ -1,0 +1,3 @@
+class UsersListInitailParams{
+  const UsersListInitailParams();
+}
