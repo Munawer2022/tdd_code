@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test123/domain/usecases/login/login_use_cases.dart';
-import 'package:test123/features/hello/hello_initial_params.dart';
+import '/domain/usecases/login/login_use_cases.dart';
+import '/features/hello/hello_initial_params.dart';
 import 'login_initial_params.dart';
 import 'login_navigator.dart';
 import 'login_state.dart';

@@ -1,19 +1,24 @@
+
+import 'dart:convert';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../domain/entities/login/mock_login_success_model.dart';
-import '../../../domain/failure/local/get_local_storage_failure.dart';
-import '../../../domain/failure/local/remove_local_storage_failure.dart';
-import '../../../domain/failure/local/set_local_storage_failure.dart';
-import '../../../domain/repositories/local/local_storage_base_api.dart';
+import '/domain/entities/local/mock_local_user_info_store_model.dart';
+import '/domain/failure/local/get_local_storage_failure.dart';
+import '/domain/failure/local/remove_local_storage_failure.dart';
+import '/domain/failure/local/set_local_storage_failure.dart';
+import '/domain/repositories/local/local_storage_base_api.dart';
 
 class InsecureLocalStorageRepository implements LocalStorageRepository {
   @override
   Future<Either<SetLocalStorageFailure, bool>> setUserData(
-      {required MockLoginSuccessModel mockLoginSuccessModel}) async {
+      {required MockLocalUserInfoStoreModel
+          mockLocalUserInfoStoreModel}) async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("token", mockLoginSuccessModel.token);
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      String userJson = jsonEncode(mockLocalUserInfoStoreModel.toJson());
+      await sp.setString('user_info', userJson);
+      // await sp.setString("token", mockLocalUserInfoStoreModel.token);
       return right(true);
     } catch (ex) {
       return left(SetLocalStorageFailure(error: ex.toString()));
@@ -21,12 +26,19 @@ class InsecureLocalStorageRepository implements LocalStorageRepository {
   }
 
   @override
-  Future<Either<GetLocalStorageFailure, MockLoginSuccessModel>>
+  Future<Either<GetLocalStorageFailure, MockLocalUserInfoStoreModel>>
       getUserData() async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      return right(MockLoginSuccessModel.empty()
-          .copyWith(token: prefs.getString("token")));
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      String? userJson = sp.getString('user_info');
+      if (userJson == null) {
+        return right(MockLocalUserInfoStoreModel.empty().copyWith());
+      }
+
+      Map<String, dynamic> userMap = jsonDecode(userJson);
+      return right(MockLocalUserInfoStoreModel.fromJson(userMap));
+      // return right(MockLocalUserInfoStoreModel.empty()
+      //     .copyWith(token: sp.getString("token")));
     } catch (ex) {
       return left(GetLocalStorageFailure(error: ex.toString()));
     }
@@ -35,8 +47,9 @@ class InsecureLocalStorageRepository implements LocalStorageRepository {
   @override
   Future<Either<RemoveLocalStorageFailure, bool>> removeUserData() async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove("token");
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      await sp.remove('user_info');
+      // await sp.remove("token");
       return right(true);
     } catch (ex) {
       return left(RemoveLocalStorageFailure(error: ex.toString()));
@@ -47,8 +60,8 @@ class InsecureLocalStorageRepository implements LocalStorageRepository {
   Future<Either<GetLocalStorageFailure, bool>> getBool(
       {required String key}) async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      return right(prefs.getBool(key) ?? false);
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      return right(sp.getBool(key) ?? false);
     } catch (ex) {
       return left(GetLocalStorageFailure(error: ex.toString()));
     }
@@ -58,8 +71,8 @@ class InsecureLocalStorageRepository implements LocalStorageRepository {
   Future<Either<SetLocalStorageFailure, bool>> setBool(
       {required String key, required bool value}) async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool(key, value);
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      await sp.setBool(key, value);
       return right(true);
     } catch (ex) {
       return left(SetLocalStorageFailure(error: ex.toString()));
