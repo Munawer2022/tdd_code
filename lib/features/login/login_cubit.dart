@@ -14,11 +14,11 @@ class LoginCubit extends Cubit<LoginState> {
       : super(LoginState.initial(initialParams: initialParams));
 
   void postLogin({required Map<String, dynamic> body}) {
-    emit(state.copyWith(isloading: true));
-    loginUseCases.execute(body: body).then((value) => value.fold(
-            (left) => emit(state.copyWith(error: left.error, isloading: false)),
-            ((right) {
-          emit(state.copyWith(success: right, isloading: false));
+    emit(state.copyWith(isLoading: true));
+    loginUseCases.execute(body: body).then((value) => value
+            .fold((l) => emit(state.copyWith(error: l.error, isLoading: false)),
+                ((r) {
+          emit(state.copyWith(success: r, isLoading: false));
           return navigator.openHello(HelloInitialParams());
         })));
   }

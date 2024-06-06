@@ -42,15 +42,15 @@ class _LoginState extends State<LoginPage> {
 
             return Column(
               children: [
-                state.isloading
+                state.isLoading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
                         style: Theme.of(context).elevatedButtonTheme.style,
                         onPressed: () => cubit.postLogin(
                             body: LoginModel(
-                                    username: "kminchelle", password: "0lelplR")
+                                    username: 'emilys', password: 'emilyspass')
                                 .toJson()),
-                        child: Text('Post API')),
+                        child: const Text('Post API')),
                 Text(state.success.token,
                     style: Theme.of(context).textTheme.titleMedium)
               ],

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test123/core/status_switcher.dart';
 import 'package:test123/domain/entities/hello/mock_hello_model.dart';
 import 'hello_cubit.dart';
 import 'hello_state.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HelloPage extends StatefulWidget {
   final HelloCubit cubit;
@@ -52,46 +54,86 @@ class _HelloState extends State<HelloPage> {
           },
         ),
       ),
-      body: Center(
+      body: RefreshIndicator.adaptive(
+        onRefresh: cubit.refresh,
         child: BlocBuilder(
           bloc: cubit,
           builder: (context, state) {
             state as HelloState;
-            if (state.error != null) {
-              return Text(state.error!);
-            }
-            return state.isloading
-                ? const CircularProgressIndicator()
-                : ListView.builder(
-                    itemCount: state.success.length,
+            return StatusSwitcher<List<MockHelloModel>>(
+                response: state.response,
+                onLoading: (context) => Shimmer.fromColors(
+                    period: const Duration(milliseconds: 300),
+                    baseColor: Colors.grey[200]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: ListView.separated(
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 10),
+                        itemCount: 6,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(12)),
+                          );
+                        })),
+                onError: (context, message) => Center(
+                    child: Text(message,
+                        style: Theme.of(context).textTheme.titleMedium)),
+                onCompleted: (context, data) => ListView.builder(
+                    itemCount: data.length,
                     itemBuilder: (context, index) {
                       return BodyText(
-                        mockHelloModel: state.success[index],
-                        onTap: () =>
-                            cubit.goHelloDetailPage(state.success[index]),
+                        mockHelloModel: data[index],
+                        onTap: () => cubit.goHelloDetailPage(data[index]),
                       );
-                    });
+                    }));
           },
         ),
       ),
+      //  Center(
+      //   child: BlocBuilder(
+      //     bloc: cubit,
+      //     builder: (context, state) {
+      //       state as HelloState;
+      //       if (state.error != null) {
+      //         return Text(state.error!);
+      //       }
+      //       return state.isloading
+      //           ? const CircularProgressIndicator()
+      //           : ListView.builder(
+      //               itemCount: state.success.length,
+      //               itemBuilder: (context, index) {
+      //                 return BodyText(
+      //                   mockHelloModel: state.success[index],
+      //                   onTap: () =>
+      //                       cubit.goHelloDetailPage(state.success[index]),
+      //                 );
+      //               });
+      //     },
+      //   ),
+      // ),
     );
   }
 }
 
 class BodyText extends StatelessWidget {
-  MockHelloModel mockHelloModel;
-  void Function() onTap;
+  final MockHelloModel mockHelloModel;
+  final void Function() onTap;
 
-  BodyText({required this.mockHelloModel, required this.onTap, super.key});
+  const BodyText(
+      {required this.mockHelloModel, required this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-        margin: EdgeInsets.all(7),
+        margin: const EdgeInsets.all(7),
         child: InkWell(
           onTap: onTap,
           child: Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: Text(mockHelloModel.address.city,
                   style: Theme.of(context).textTheme.titleMedium)),
         ));

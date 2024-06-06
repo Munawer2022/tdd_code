@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test123/config/response/api_response.dart';
 import '/data/datasources/login/login_data_sources.dart';
 import '/data/datasources/theme/theme_data_source.dart';
 import '../../domain/usecases/theme/update_theme_use_case.dart';
@@ -31,11 +32,16 @@ class HelloCubit extends Cubit<HelloState> {
       : super(HelloState.initial(initialParams: initialParams));
 
   Future<void> fetchHello() async {
-    emit(state.copyWith(isloading: true));
+    // emit(state.copyWith(isloading: true));
+    emit(state.copyWith(response: ApiResponse.loading()));
+
     final hello = await baseApiServices.hello();
     hello.fold(
-        (left) => emit(state.copyWith(error: left.error, isloading: false)),
-        ((right) => emit(state.copyWith(success: right, isloading: false))));
+        (left) => emit(state.copyWith(response: ApiResponse.error(left.error))),
+        // (left) => emit(state.copyWith(error: left.error, isloading: false)),
+        ((right) =>
+            emit(state.copyWith(response: ApiResponse.completed(right)))));
+    // ((right) => emit(state.copyWith(success: right, isloading: false))));
   }
 
   goHelloDetailPage(MockHelloModel success) => navigator
@@ -50,12 +56,12 @@ class HelloCubit extends Cubit<HelloState> {
   }
 
   logout() {
-    emit(state.copyWith(logoutloading: true));
+    emit(state.copyWith(logoutLoading: true));
     _localStorageRepository.removeUserData().then(
           (value) => value.fold(
-            (l) => emit(state.copyWith(logoutloading: false)),
+            (l) => emit(state.copyWith(logoutLoading: false)),
             (r) {
-              emit(state.copyWith(logoutloading: false));
+              emit(state.copyWith(logoutLoading: false));
               return navigator.openLogin(const LoginInitialParams());
             },
           ),
@@ -63,4 +69,7 @@ class HelloCubit extends Cubit<HelloState> {
   }
 
   void onThemeChanged(bool value) => _updateThemeUseCase.execute(value);
+  Future<void> refresh() async {
+    await fetchHello();
+  }
 }
