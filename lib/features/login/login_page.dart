@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test123/core/app_button.dart';
 import '../../data/models/login/login_model.dart';
 import 'login_cubit.dart';
 import 'login_state.dart';
@@ -42,15 +43,13 @@ class _LoginState extends State<LoginPage> {
 
             return Column(
               children: [
-                state.isLoading
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        style: Theme.of(context).elevatedButtonTheme.style,
-                        onPressed: () => cubit.postLogin(
-                            body: LoginModel(
-                                    username: 'emilys', password: 'emilyspass')
-                                .toJson()),
-                        child: const Text('Post API')),
+                AppButton.getButton(
+                    loading: state.isLoading,
+                    onPressed: () => cubit.postLogin(
+                        body: LoginModel(
+                                username: 'emilys', password: 'emilyspass')
+                            .toJson()),
+                    child: const Text('Post API')),
                 Text(state.success.token,
                     style: Theme.of(context).textTheme.titleMedium)
               ],
