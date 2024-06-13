@@ -18,7 +18,10 @@ class LoginNavigator with HelloRoute {
 //is page pr navigate pr nay ky liya
 mixin LoginRoute {
   openLogin(LoginInitialParams initialParams) {
-    navigator.push(context, LoginPage(cubit: getIt(param1: initialParams)));
+    navigator.pushAndRemoveUntil(
+        context: context,
+        routeName: LoginPage(cubit: getIt(param1: initialParams)),
+        predicate: (Route<dynamic> route) => false);
   }
 
   AppNavigator get navigator;

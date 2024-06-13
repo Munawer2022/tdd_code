@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'core/utils/utils.dart';
+import 'core/global.dart';
+import 'core/show/checker_navigator_observer.dart';
 import 'data/datasources/theme/theme_data_source.dart';
 import 'features/hello/hello_page.dart';
 import 'features/hello/hello_initial_params.dart';
@@ -35,6 +36,9 @@ class MyApp extends StatelessWidget {
             builder: (context, state) {
               state as bool;
               return MaterialApp(
+                  navigatorKey: GlobalConstants.navigatorKey,
+                  scaffoldMessengerKey: GlobalConstants.scaffoldMessengerKey,
+                  navigatorObservers: [CheckerNavigatorObserver()],
                   debugShowCheckedModeBanner: false,
                   theme: state ? darkTheme : lightTheme,
                   // home: HelloPage(cubit: getIt(param1: HelloInitialParams())));

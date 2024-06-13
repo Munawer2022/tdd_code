@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/config/navigation/transitions_checker.dart';
+import 'package:test123/config/navigation/transition_type.dart';
 import 'hello_detail_initial_params.dart';
 import 'hello_detail_page.dart';
 import '/config/navigation/app_navigator.dart';
@@ -19,8 +19,8 @@ class HelloDetailNavigator {
 mixin HelloDetailRoute {
   openHelloDetail(HelloDetailInitialParams initialParams) {
     navigator.push(
-      context,
-      HelloDetailPage(
+      context: context,
+      routeName: HelloDetailPage(
         cubit: getIt(param1: initialParams),
       ),
       transitionType: TransitionType.slideFromTop,

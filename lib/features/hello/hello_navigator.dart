@@ -19,7 +19,9 @@ class HelloNavigator with HelloDetailRoute, LoginRoute {
 //is page pr navigate pr nay ky liya
 mixin HelloRoute {
   openHello(HelloInitialParams initialParams) {
-    navigator.push(context, HelloPage(cubit: getIt(param1: initialParams)));
+    navigator.push(
+        context: context,
+        routeName: HelloPage(cubit: getIt(param1: initialParams)));
   }
 
   AppNavigator get navigator;
