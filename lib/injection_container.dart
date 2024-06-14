@@ -36,7 +36,7 @@ import 'features/splash/splash_initial_params.dart';
 import 'features/splash/splash_navigator.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'core/show/show_error/show_errors.dart';
-import 'features/internet_connectivity_checker_view_model.dart';
+import '/data/datasources/internet_connectivity/internet_connectivity_checker_data_sources.dart';
 
 final getIt = GetIt.instance;
 
@@ -65,8 +65,8 @@ Future<void> init() async {
   getIt.registerSingleton<Connectivity>(Connectivity());
   getIt.registerSingleton<ShowError>(ShowError());
 
-  getIt.registerSingleton<InternetConnectivityCheckerViewModel>(
-      InternetConnectivityCheckerViewModel(getIt(), getIt()));
+  getIt.registerSingleton<InternetConnectivityCheckerDataSources>(
+      InternetConnectivityCheckerDataSources(getIt(), getIt()));
 
   //home
   getIt.registerSingleton<HelloBaseApiService>(HelloRepository(getIt()));
