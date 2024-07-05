@@ -5,6 +5,7 @@ import 'package:test123/data/datasources/login/login_data_sources.dart';
 import 'package:test123/data/repositories/network/dio_network_repository.dart';
 import 'package:test123/domain/repositories/network/network_base_api_service.dart';
 import 'package:test123/domain/usecases/local/check_for_existing_user_use_case.dart';
+import 'package:test123/features/login/login_bloc.dart';
 
 import 'data/datasources/theme/theme_data_source.dart';
 import 'data/repositories/local/insecure_local_storage_repository.dart';
@@ -85,8 +86,10 @@ Future<void> init() async {
   getIt.registerSingleton<LoginUseCases>(
       LoginUseCases(getIt(), getIt(), getIt()));
   getIt.registerSingleton<LoginNavigator>(LoginNavigator(getIt()));
-  getIt.registerFactoryParam<LoginCubit, LoginInitialParams, dynamic>(
-      (params, _) => LoginCubit(params, getIt(), getIt()));
+  getIt.registerFactoryParam<LoginBloc, LoginInitialParams, dynamic>(
+      (params, _) => LoginBloc(params, getIt(), getIt()));
+  // getIt.registerFactoryParam<LoginCubit, LoginInitialParams, dynamic>(
+  //     (params, _) => LoginCubit(params, getIt(), getIt()));
 
 /*
 ************************ hello_detail ************************

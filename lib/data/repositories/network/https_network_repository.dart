@@ -18,7 +18,8 @@ class HttpsNetworkRepository implements NetworkBaseApiService {
       var uri = Uri.parse(url);
       var response = await http.get(uri, headers: {
         // 'Authorization': 'Bearer $token'
-        'Authorization': 'Bearer ${_loginDataSources.state.token}'
+        'Authorization':
+            'Bearer ${_loginDataSources.state.mockLoginSuccessModel.token}'
       }).timeout(const Duration(seconds: 10));
       final failure = _handleStatusCode(response);
       if (failure != null) {
@@ -67,7 +68,10 @@ class HttpsNetworkRepository implements NetworkBaseApiService {
           .patch(uri,
               body: body,
               headers: headers ??
-                  {'Authorization': 'Bearer ${_loginDataSources.state.token}'})
+                  {
+                    'Authorization':
+                        'Bearer ${_loginDataSources.state.mockLoginSuccessModel.token}'
+                  })
           .timeout(const Duration(seconds: 10));
       final failure = _handleStatusCode(response);
       if (failure != null) {

@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:test123/data/datasources/login/login_data_sources_event.dart';
 import '/data/datasources/login/login_data_sources.dart';
 import '/domain/entities/local/mock_local_user_info_store_model.dart';
 import '/domain/failure/local/existing_user_failure.dart';
@@ -18,8 +19,10 @@ class CheckForExistingUserUseCase {
             (l) => left(ExistingUserFailure(error: l.error)),
             (mockLocalUserInfoStoreModel) {
               if (mockLocalUserInfoStoreModel.token.isNotEmpty) {
-                _loginDataSources
-                    .setLoginDataSources(mockLocalUserInfoStoreModel);
+                _loginDataSources.add(SetLoginDataSources(
+                    mockLoginSuccessModel: mockLocalUserInfoStoreModel));
+                // .setLoginDataSources(
+                //     mockLoginSuccessModel: mockLocalUserInfoStoreModel);
                 return right(mockLocalUserInfoStoreModel);
 
                 // return _loginBaseApiService.getUserByEmail(token).then(

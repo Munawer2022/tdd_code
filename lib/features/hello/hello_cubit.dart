@@ -48,7 +48,7 @@ class HelloCubit extends Cubit<HelloState> {
       .openHelloDetail(HelloDetailInitialParams(mockHelloModel: success));
   onInitLoginDataSources() {
     emit(state.copyWith(
-        mockLoginSuccessModel: loginDataSources.state,
+        mockLoginSuccessModel: loginDataSources.state.mockLoginSuccessModel,
         isDarkTheme: _themeDataSources.state));
     _themeDataSources.stream.listen((event) {
       emit(state.copyWith(isDarkTheme: event));

@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:test123/data/datasources/login/login_data_sources_event.dart';
 import '/domain/entities/local/mock_local_user_info_store_model.dart';
 import '/domain/failure/login/login_failure.dart';
 import '/data/datasources/login/login_data_sources.dart';
@@ -19,7 +20,9 @@ class LoginUseCases {
               .setUserData(mockLocalUserInfoStoreModel: r)
               .then((value) => value.fold(
                       (l) => left(LoginFailure(error: l.error)), (tokenRight) {
-                    _loginDataSources.setLoginDataSources(r);
+                    // _loginDataSources.setLoginDataSources(r);
+                    _loginDataSources
+                        .add(SetLoginDataSources(mockLoginSuccessModel: r));
                     return right(r);
                   }))));
 }
