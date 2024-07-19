@@ -13,16 +13,12 @@ import 'features/splash/splash_initial_params.dart';
 import 'features/splash/splash_page.dart';
 import 'injection_container.dart' as di;
 import 'injection_container.dart';
-import 'multi_bloc_list_injection.dart';
 
 void main() async {
   // setCustomSystemUIOverlayStyle();
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
-  runApp(
-      MultiBlocProvider(providers: multiBlocListInjection, child: const MyApp())
-      // const MyApp(),
-      );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

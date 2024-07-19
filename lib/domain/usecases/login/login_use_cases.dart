@@ -20,9 +20,10 @@ class LoginUseCases {
               .setUserData(mockLocalUserInfoStoreModel: r)
               .then((value) => value.fold(
                       (l) => left(LoginFailure(error: l.error)), (tokenRight) {
-                    // _loginDataSources.setLoginDataSources(r);
-                    _loginDataSources
-                        .add(SetLoginDataSources(mockLoginSuccessModel: r));
+                    _loginDataSources.setLoginDataSources(
+                        mockLoginSuccessModel: r);
+                    // _loginDataSources
+                    //     .add(SetLoginDataSources(mockLoginSuccessModel: r));
                     return right(r);
                   }))));
 }

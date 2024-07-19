@@ -21,10 +21,7 @@ class SlideFromRightPageRoute<T> extends PageRouteBuilder<T> {
                 Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
             var offsetAnimation = animation.drive(tween);
 
-            return SlideTransition(
-              position: offsetAnimation,
-              child: child,
-            );
+            return SlideTransition(position: offsetAnimation, child: child);
           },
         );
 }

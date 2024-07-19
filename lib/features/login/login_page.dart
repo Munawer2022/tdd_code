@@ -9,21 +9,18 @@ import 'login_cubit.dart';
 import 'login_state.dart';
 
 class LoginPage extends StatefulWidget {
-  final LoginBloc cubit;
-  // final LoginCubit cubit;
+  // final LoginBloc cubit;
+  final LoginCubit cubit;
 
-  const LoginPage({
-    Key? key,
-    required this.cubit,
-  }) : super(key: key);
+  const LoginPage({Key? key, required this.cubit}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginState();
 }
 
 class _LoginState extends State<LoginPage> {
-  // LoginCubit get cubit => widget.cubit;
-  LoginBloc get cubit => widget.cubit;
+  LoginCubit get cubit => widget.cubit;
+  // LoginBloc get cubit => widget.cubit;
 
   @override
   void initState() {
@@ -36,15 +33,13 @@ class _LoginState extends State<LoginPage> {
     return Scaffold(
       body: Center(
         // child: BlocBuilder<LoginCubit, LoginState>(
-        child: BlocBuilder<LoginBloc, LoginState>(
-          // bloc: cubit,
+        child: BlocBuilder(
+          // child: BlocBuilder<LoginBloc, LoginState>(
+          bloc: cubit,
           builder: (context, state) {
-            // state as LoginState;
+            state as LoginState;
             if (state.error != null) {
-              return Text(
-                state.error!,
-                textAlign: TextAlign.center,
-              );
+              return Text(state.error!, textAlign: TextAlign.center);
             }
 
             return Column(
@@ -52,14 +47,14 @@ class _LoginState extends State<LoginPage> {
               children: [
                 AppButton.getButton(
                     loading: state.isLoading,
-                    onPressed: () => context.read<LoginBloc>().add(Login(
-                        body: LoginModel(
-                                username: 'emilys', password: 'emilyspass')
-                            .toJson())),
-                    // onPressed: () => cubit.postLogin(
+                    // onPressed: () => context.read<LoginBloc>().add(Login(
                     //     body: LoginModel(
                     //             username: 'emilys', password: 'emilyspass')
-                    //         .toJson()),
+                    //         .toJson())),
+                    onPressed: () => cubit.postLogin(
+                        body: LoginModel(
+                                username: 'emilys', password: 'emilyspass')
+                            .toJson()),
                     child: const Text('Post API')),
                 Text(state.success.token,
                     style: Theme.of(context).textTheme.titleMedium)

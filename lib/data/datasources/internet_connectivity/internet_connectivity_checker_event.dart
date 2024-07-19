@@ -1,1 +1,1 @@
-class InternetConnectivityCheckerEvent {}
+// class InternetConnectivityCheckerEvent {}

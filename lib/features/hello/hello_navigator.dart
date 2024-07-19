@@ -20,10 +20,9 @@ class HelloNavigator with HelloDetailRoute, LoginRoute {
 mixin HelloRoute {
   openHello(HelloInitialParams initialParams) {
     navigator.pushAndRemoveUntil(
-      context: context,
-      routeName: HelloPage(cubit: getIt(param1: initialParams)),
-      predicate: (route) => false,
-    );
+        context: context,
+        routeName: HelloPage(cubit: getIt(param1: initialParams)),
+        predicate: (route) => false);
   }
 
   AppNavigator get navigator;

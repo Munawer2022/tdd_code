@@ -52,16 +52,10 @@ Future<void> init() async {
       InsecureLocalStorageRepository());
   getIt.registerSingleton<ThemeDataSources>(ThemeDataSources());
   getIt.registerSingleton<GetThemeUseCase>(
-    GetThemeUseCase(
-      getIt(),
-      getIt(),
-    ),
+    GetThemeUseCase(getIt(), getIt()),
   );
   getIt.registerSingleton<UpdateThemeUseCase>(
-    UpdateThemeUseCase(
-      getIt(),
-      getIt(),
-    ),
+    UpdateThemeUseCase(getIt(), getIt()),
   );
   getIt.registerSingleton<Connectivity>(Connectivity());
   getIt.registerSingleton<ShowError>(ShowError());
@@ -86,10 +80,10 @@ Future<void> init() async {
   getIt.registerSingleton<LoginUseCases>(
       LoginUseCases(getIt(), getIt(), getIt()));
   getIt.registerSingleton<LoginNavigator>(LoginNavigator(getIt()));
-  getIt.registerFactoryParam<LoginBloc, LoginInitialParams, dynamic>(
-      (params, _) => LoginBloc(params, getIt(), getIt()));
-  // getIt.registerFactoryParam<LoginCubit, LoginInitialParams, dynamic>(
-  //     (params, _) => LoginCubit(params, getIt(), getIt()));
+  // getIt.registerFactoryParam<LoginBloc, LoginInitialParams, dynamic>(
+  //     (params, _) => LoginBloc(params, getIt(), getIt()));
+  getIt.registerFactoryParam<LoginCubit, LoginInitialParams, dynamic>(
+      (params, _) => LoginCubit(params, getIt(), getIt()));
 
 /*
 ************************ hello_detail ************************

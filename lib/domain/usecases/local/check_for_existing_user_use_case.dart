@@ -19,10 +19,12 @@ class CheckForExistingUserUseCase {
             (l) => left(ExistingUserFailure(error: l.error)),
             (mockLocalUserInfoStoreModel) {
               if (mockLocalUserInfoStoreModel.token.isNotEmpty) {
-                _loginDataSources.add(SetLoginDataSources(
-                    mockLoginSuccessModel: mockLocalUserInfoStoreModel));
-                // .setLoginDataSources(
-                //     mockLoginSuccessModel: mockLocalUserInfoStoreModel);
+                _loginDataSources
+                    .
+                    // add(SetLoginDataSources(
+                    //     mockLoginSuccessModel: mockLocalUserInfoStoreModel));
+                    setLoginDataSources(
+                        mockLoginSuccessModel: mockLocalUserInfoStoreModel);
                 return right(mockLocalUserInfoStoreModel);
 
                 // return _loginBaseApiService.getUserByEmail(token).then(

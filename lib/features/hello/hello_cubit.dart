@@ -48,7 +48,7 @@ class HelloCubit extends Cubit<HelloState> {
       .openHelloDetail(HelloDetailInitialParams(mockHelloModel: success));
   onInitLoginDataSources() {
     emit(state.copyWith(
-        mockLoginSuccessModel: loginDataSources.state.mockLoginSuccessModel,
+        mockLoginSuccessModel: loginDataSources.state,
         isDarkTheme: _themeDataSources.state));
     _themeDataSources.stream.listen((event) {
       emit(state.copyWith(isDarkTheme: event));
@@ -69,7 +69,5 @@ class HelloCubit extends Cubit<HelloState> {
   }
 
   void onThemeChanged(bool value) => _updateThemeUseCase.execute(value);
-  Future<void> refresh() async {
-    await fetchHello();
-  }
+  Future<void> refresh() async => await fetchHello();
 }
