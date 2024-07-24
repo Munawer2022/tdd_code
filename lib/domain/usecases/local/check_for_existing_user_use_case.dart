@@ -1,5 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:test123/data/datasources/login/login_data_sources_event.dart';
 import '/data/datasources/login/login_data_sources.dart';
 import '/domain/entities/local/mock_local_user_info_store_model.dart';
 import '/domain/failure/local/existing_user_failure.dart';
@@ -9,9 +8,7 @@ class CheckForExistingUserUseCase {
   final LoginDataSources _loginDataSources;
   final LocalStorageRepository _localStorageRepository;
   CheckForExistingUserUseCase(
-    this._loginDataSources,
-    this._localStorageRepository,
-  );
+      this._loginDataSources, this._localStorageRepository);
 
   Future<Either<ExistingUserFailure, MockLocalUserInfoStoreModel>> execute() {
     return _localStorageRepository.getUserData().then(

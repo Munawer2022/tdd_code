@@ -14,9 +14,9 @@ import 'domain/repositories/local/local_storage_base_api.dart';
 import 'domain/usecases/login/login_use_cases.dart';
 import 'domain/usecases/theme/get_theme_use_case.dart';
 import 'domain/usecases/theme/update_theme_use_case.dart';
-import 'features/hello_detail_feature/hello_detail_cubit.dart';
-import 'features/hello_detail_feature/hello_detail_navigator.dart';
-import 'features/hello_detail_feature/hello_detail_initial_params.dart';
+import 'features/hello_detail/hello_detail_cubit.dart';
+import 'features/hello_detail/hello_detail_navigator.dart';
+import 'features/hello_detail/hello_detail_initial_params.dart';
 import 'config/navigation/app_navigator.dart';
 
 import 'package:get_it/get_it.dart';

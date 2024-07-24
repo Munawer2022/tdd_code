@@ -8,11 +8,14 @@ on:
       - main
       - master
       - develop
+
 name: "Build & Release"
+
 jobs:
   build:
     name: Build & Release
     runs-on: macos-latest
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -38,3 +41,10 @@ jobs:
           artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
+      - name: Send WhatsApp Notification
+        run: |
+          curl -X POST "https://api.twilio.com/2010-04-01/Accounts/${{ secrets.TWILIO_ACCOUNT_SID }}/Messages.json" \
+          --data-urlencode "Body=New Flutter release v1.0.${{ github.run_number }} is available." \
+          --data-urlencode "From=whatsapp:${{ secrets.TWILIO_WHATSAPP_FROM }}" \
+          --data-urlencode "To=whatsapp:${{ secrets.TWILIO_WHATSAPP_TO }}" \
+          -u ${{ secrets.TWILIO_ACCOUNT_SID }}:${{ secrets.TWILIO_AUTH_TOKEN }}

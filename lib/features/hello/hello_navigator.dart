@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test123/features/hello_detail_feature/hello_detail_navigator.dart';
+import 'package:test123/features/hello_detail/hello_detail_navigator.dart';
 import 'package:test123/features/login/login_navigator.dart';
 import 'hello_initial_params.dart';
 import 'hello_page.dart';

@@ -5,7 +5,7 @@ import '/data/datasources/theme/theme_data_source.dart';
 import '../../domain/usecases/theme/update_theme_use_case.dart';
 import '/domain/entities/hello/mock_hello_model.dart';
 import '/domain/repositories/local/local_storage_base_api.dart';
-import '../hello_detail_feature/hello_detail_initial_params.dart';
+import '../hello_detail/hello_detail_initial_params.dart';
 import '../login/login_initial_params.dart';
 import '/domain/repositories/hello/hello_base_api_service.dart';
 import 'hello_initial_params.dart';

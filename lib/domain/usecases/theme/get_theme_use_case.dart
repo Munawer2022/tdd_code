@@ -1,10 +1,8 @@
 import 'package:fpdart/fpdart.dart';
-
-import 'package:test123/data/datasources/theme/theme_data_source.dart';
-import '../../failure/theme/get_theme_failure.dart';
-
-import '../../../core/global.dart';
-import '../../repositories/local/local_storage_base_api.dart';
+import '/core/global.dart';
+import '/domain/failure/theme/get_theme_failure.dart';
+import '/domain/repositories/local/local_storage_base_api.dart';
+import '/data/datasources/theme/theme_data_source.dart';
 
 class GetThemeUseCase {
   final LocalStorageRepository _localStorageRepository;
