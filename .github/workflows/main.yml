@@ -41,20 +41,6 @@ jobs:
         run: |
           mv build/app/outputs/apk/release/app-x86_64-release.apk build/app/outputs/apk/release/app-x86_64-release-${{ env.date }}.apk
           mv build/ios/iphoneos/app.ipa build/ios/iphoneos/app-${{ env.date }}.ipa
-      - name: Upload IPA to Google Drive
-        id: upload_ipa
-        uses: willo32/google-drive-upload-action@v1
-        with:
-          target: build/ios/iphoneos/app-${{ env.date }}.ipa
-          credentials: ${{ secrets.GDRIVE_KEY }}
-          parent_folder_id: ${{ secrets.GDRIVE_FOLDER_ID }}
-      - name: Upload APK to Google Drive
-        id: upload_apk
-        uses: willo32/google-drive-upload-action@v1
-        with:
-          target: build/app/outputs/apk/release/app-x86_64-release-${{ env.date }}.apk
-          credentials: ${{ secrets.GDRIVE_KEY }}
-          parent_folder_id: ${{ secrets.GDRIVE_FOLDER_ID }}
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
@@ -63,8 +49,6 @@ jobs:
           token: ${{ secrets.TOKEN }}
       - name: Send notification to Slack
         run: |
-          IPA_LINK="https://drive.google.com/file/d/${{ steps.upload_ipa.outputs.file_id }}/view"
-          APK_LINK="https://drive.google.com/file/d/${{ steps.upload_apk.outputs.file_id }}/view"
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "New Flutter release build is available. Version: v1.0.${{ github.run_number }}. Download the files here: [IPA](${IPA_LINK}) and [APK](${APK_LINK})"
+            "text": "New Flutter release build is available. Version: v1.0.${{ github.run_number }}. Files: app-x86_64-release-${{ env.date }}.apk and app-${{ env.date }}.ipa"
           }' ${{ secrets.SLACK_WEBHOOK_URL }}
