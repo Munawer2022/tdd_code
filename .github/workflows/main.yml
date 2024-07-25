@@ -33,24 +33,38 @@ jobs:
           cd Payload
           ln -s ../Runner.app
           cd ..
-          TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-          zip -r "app_ios_${TIMESTAMP}.ipa" Payload
-          mv "app_ios_${TIMESTAMP}.ipa" ../
-      - name: Upload APK and IPA files
-        uses: actions/upload-artifact@v3
+          zip -r app.ipa Payload
+      - name: Generate Date String
+        id: date
+        run: echo "date=$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
+      - name: Rename APK and IPA Files
+        run: |
+          mv build/app/outputs/apk/release/app-x86_64-release.apk build/app/outputs/apk/release/app-x86_64-release-${{ env.date }}.apk
+          mv build/ios/iphoneos/app.ipa build/ios/iphoneos/app-${{ env.date }}.ipa
+      - name: Upload IPA to Google Drive
+        id: upload_ipa
+        uses: willo32/google-drive-upload-action@v1
         with:
-          name: release-artifacts
-          path: |
-            build/app/outputs/apk/release/*.apk
-            build/ios/iphoneos/app_ios_${TIMESTAMP}.ipa
+          target: build/ios/iphoneos/app-${{ env.date }}.ipa
+          credentials: ${{ secrets.GDRIVE_KEY }}
+          parent_folder_id: ${{ secrets.GDRIVE_FOLDER_ID }}
+      - name: Upload APK to Google Drive
+        id: upload_apk
+        uses: willo32/google-drive-upload-action@v1
+        with:
+          target: build/app/outputs/apk/release/app-x86_64-release-${{ env.date }}.apk
+          credentials: ${{ secrets.GDRIVE_KEY }}
+          parent_folder_id: ${{ secrets.GDRIVE_FOLDER_ID }}
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/release/*.apk,build/ios/iphoneos/app_ios_${TIMESTAMP}.ipa"
+          artifacts: "build/app/outputs/apk/release/app-x86_64-release-${{ env.date }}.apk,build/ios/iphoneos/app-${{ env.date }}.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
       - name: Send notification to Slack
         run: |
+          IPA_LINK="https://drive.google.com/file/d/${{ steps.upload_ipa.outputs.file_id }}/view"
+          APK_LINK="https://drive.google.com/file/d/${{ steps.upload_apk.outputs.file_id }}/view"
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "New Flutter release build is available. Version: v1.0.${{ github.run_number }}\nAndroid APK: app_android_${TIMESTAMP}.apk\niOS IPA: app_ios_${TIMESTAMP}.ipa"
+            "text": "New Flutter release build is available. Version: v1.0.${{ github.run_number }}. Download the files here: [IPA](${IPA_LINK}) and [APK](${APK_LINK})"
           }' ${{ secrets.SLACK_WEBHOOK_URL }}
