@@ -34,14 +34,43 @@ jobs:
           ln -s ../Runner.app
           cd ..
           zip -r app.ipa Payload
+      - name: Generate Date String
+        id: date
+        run: echo "date=$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
+      - name: Rename APK and IPA Files
+        run: |
+          mv build/app/outputs/apk/release/app-x86_64-release.apk build/app/outputs/apk/release/app-x86_64-release-${{ env.date }}.apk
+          mv build/ios/iphoneos/app.ipa build/ios/iphoneos/app-${{ env.date }}.ipa
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install Google API Client
+        run: pip install google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
+      - name: Upload IPA to Google Drive
+        id: upload_ipa
+        run: |
+          python gdrive_upload.py build/ios/iphoneos/app-${{ env.date }}.ipa ${{ secrets.GDRIVE_FOLDER_ID }} gdrive_key.json > ipa_link.txt
+        env:
+          GDRIVE_KEY: ${{ secrets.GDRIVE_KEY }}
+        shell: bash
+      - name: Upload APK to Google Drive
+        id: upload_apk
+        run: |
+          python gdrive_upload.py build/app/outputs/apk/release/app-x86_64-release-${{ env.date }}.apk ${{ secrets.GDRIVE_FOLDER_ID }} gdrive_key.json > apk_link.txt
+        env:
+          GDRIVE_KEY: ${{ secrets.GDRIVE_KEY }}
+        shell: bash
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
+          artifacts: "build/app/outputs/apk/release/app-x86_64-release-${{ env.date }}.apk,build/ios/iphoneos/app-${{ env.date }}.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
       - name: Send notification to Slack
         run: |
+          IPA_LINK=$(cat ipa_link.txt)
+          APK_LINK=$(cat apk_link.txt)
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "New Flutter release build is available. Version: v1.0.${{ github.run_number }}"
+            "text": "New Flutter release build is available. Version: v1.0.${{ github.run_number }}. Download the files here: [IPA](${IPA_LINK}) and [APK](${APK_LINK})"
           }' ${{ secrets.SLACK_WEBHOOK_URL }}
